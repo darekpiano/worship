@@ -221,6 +221,41 @@ main {
     display: block;
 }
 
+/* Song detail view */
+body.song-detail .search-section {
+    display: none;
+}
+
+body.song-detail .song-view {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.back-button {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: none;
+}
+
+.back-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+body.song-detail .back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+body.song-detail .controls button:not(.back-button) {
+    display: none;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     html {
@@ -248,5 +283,9 @@ main {
 
     .chord {
         font-size: 0.8rem;
+    }
+
+    body.song-detail .song-view {
+        margin: 0;
     }
 } 

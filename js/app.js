@@ -14,6 +14,7 @@ class SongbookApp {
         this.fontSizeIncrease = document.getElementById('fontSizeIncrease');
         this.fontSizeDecrease = document.getElementById('fontSizeDecrease');
         this.toggleChords = document.getElementById('toggleChords');
+        this.backButton = document.querySelector('.back-button');
 
         // Initialize other properties
         this.songs = [];
@@ -34,6 +35,12 @@ class SongbookApp {
         await this.loadSongs();
         this.setupEventListeners();
         this.displaySongsList();
+
+        // Check if there's a song ID in the URL hash
+        const songId = window.location.hash.slice(1);
+        if (songId) {
+            this.loadAndDisplaySong(songId);
+        }
     }
 
     async loadSongs() {
@@ -67,7 +74,8 @@ class SongbookApp {
     }
 
     setupEventListeners() {
-        if (!this.fontSizeIncrease || !this.fontSizeDecrease || !this.searchInput || !this.alphabet || !this.songsList || !this.toggleChords) {
+        if (!this.fontSizeIncrease || !this.fontSizeDecrease || !this.searchInput || 
+            !this.alphabet || !this.songsList || !this.toggleChords || !this.backButton) {
             console.error('Required DOM elements not found');
             return;
         }
@@ -81,6 +89,9 @@ class SongbookApp {
             const chordsVisible = !document.body.classList.contains('hide-chords');
             this.toggleChordsVisibility(!chordsVisible);
         });
+
+        // Back button
+        this.backButton.addEventListener('click', () => this.showSongsList());
 
         // Search input
         this.searchInput.addEventListener('input', () => {
@@ -106,6 +117,17 @@ class SongbookApp {
             if (songItem) {
                 const songId = songItem.dataset.songId;
                 this.loadAndDisplaySong(songId);
+                window.location.hash = songId;
+            }
+        });
+
+        // Handle browser back button
+        window.addEventListener('popstate', () => {
+            const songId = window.location.hash.slice(1);
+            if (songId) {
+                this.loadAndDisplaySong(songId);
+            } else {
+                this.showSongsList();
             }
         });
     }
@@ -154,6 +176,8 @@ class SongbookApp {
             const content = await response.text();
             const song = this.songParser.parse(content);
             
+            document.body.classList.add('song-detail');
+            
             this.songView.innerHTML = `
                 <h2>${song.title}</h2>
                 <div class="subtitle">${song.author}</div>
@@ -175,6 +199,12 @@ class SongbookApp {
             console.error('Error loading song:', error);
             this.songView.innerHTML = '<p>Error loading song</p>';
         }
+    }
+
+    showSongsList() {
+        document.body.classList.remove('song-detail');
+        this.songView.innerHTML = '';
+        window.location.hash = '';
     }
 
     changeFontSize(delta) {
