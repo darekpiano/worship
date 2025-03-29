@@ -13,6 +13,7 @@ class SongbookApp {
         this.alphabet = document.querySelector('.alphabet');
         this.fontSizeIncrease = document.getElementById('fontSizeIncrease');
         this.fontSizeDecrease = document.getElementById('fontSizeDecrease');
+        this.toggleChords = document.getElementById('toggleChords');
 
         // Initialize other properties
         this.songs = [];
@@ -20,6 +21,10 @@ class SongbookApp {
         this.songParser = new SongParser();
         this.currentFontSize = parseInt(localStorage.getItem('fontSize')) || 16;
         document.documentElement.style.fontSize = `${this.currentFontSize}px`;
+        
+        // Initialize chord visibility
+        const chordsVisible = localStorage.getItem('chordsVisible') !== 'false';
+        this.toggleChordsVisibility(chordsVisible, false);
         
         // Start the app
         this.init();
@@ -62,7 +67,7 @@ class SongbookApp {
     }
 
     setupEventListeners() {
-        if (!this.fontSizeIncrease || !this.fontSizeDecrease || !this.searchInput || !this.alphabet || !this.songsList) {
+        if (!this.fontSizeIncrease || !this.fontSizeDecrease || !this.searchInput || !this.alphabet || !this.songsList || !this.toggleChords) {
             console.error('Required DOM elements not found');
             return;
         }
@@ -70,6 +75,12 @@ class SongbookApp {
         // Font size controls
         this.fontSizeIncrease.addEventListener('click', () => this.changeFontSize(1));
         this.fontSizeDecrease.addEventListener('click', () => this.changeFontSize(-1));
+
+        // Toggle chords
+        this.toggleChords.addEventListener('click', () => {
+            const chordsVisible = !document.body.classList.contains('hide-chords');
+            this.toggleChordsVisibility(!chordsVisible);
+        });
 
         // Search input
         this.searchInput.addEventListener('input', () => {
@@ -170,6 +181,14 @@ class SongbookApp {
         this.currentFontSize = Math.max(12, Math.min(24, this.currentFontSize + delta));
         document.documentElement.style.fontSize = `${this.currentFontSize}px`;
         localStorage.setItem('fontSize', this.currentFontSize);
+    }
+
+    toggleChordsVisibility(visible, save = true) {
+        document.body.classList.toggle('hide-chords', !visible);
+        this.toggleChords.classList.toggle('active', visible);
+        if (save) {
+            localStorage.setItem('chordsVisible', visible);
+        }
     }
 }
 
