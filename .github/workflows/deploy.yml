@@ -11,25 +11,20 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-
-      - name: Install dependencies
-        run: npm install
-
       - name: Generate songs list
         run: |
-          echo "const SONGS_LIST = [" > songs.js
+          echo "const SONGS_LIST = [" > js/songs.js
           for file in songs/*.chordpro; do
             if [ -f "$file" ]; then
-              filename=$(basename "$file")
-              id="${filename%.*}"
-              echo "  '$id'," >> songs.js
+              filename=$(basename "$file" .chordpro)
+              echo "  '$filename'," >> js/songs.js
             fi
           done
-          echo "];" >> songs.js
+          echo "];" >> js/songs.js
+
+      - name: Update index.html
+        run: |
+          sed -i 's|<script>.*const SONGS_LIST.*</script>|<script src="js/songs.js"></script>|' index.html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
