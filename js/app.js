@@ -178,27 +178,62 @@ class SongbookApp {
             
             document.body.classList.add('song-detail');
             
-            this.songView.innerHTML = `
-                <h2>${song.title}</h2>
-                <div class="subtitle">${song.author}</div>
-                ${song.sections.map(section => `
-                    <div class="section">
-                        ${section.name ? `<h3>${section.name}</h3>` : ''}
-                        ${section.lines.map(line => `
-                            <div class="line">
-                                ${line.chordPositions.map(cp => `
-                                    <span class="chord" style="left: ${cp.position}ch">${cp.chord}</span>
-                                `).join('')}
-                                <span class="text">${line.text}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                `).join('')}
-            `;
+            this.displaySong(song);
         } catch (error) {
             console.error('Error loading song:', error);
             this.songView.innerHTML = '<p>Error loading song</p>';
         }
+    }
+
+    displaySong(song) {
+        const songView = document.querySelector('.song-view');
+        songView.innerHTML = '';
+
+        // Tytuł i autor
+        const title = document.createElement('h2');
+        title.textContent = song.title;
+        songView.appendChild(title);
+
+        if (song.author) {
+            const subtitle = document.createElement('div');
+            subtitle.className = 'subtitle';
+            subtitle.textContent = song.author;
+            songView.appendChild(subtitle);
+        }
+
+        // Sekcje
+        song.sections.forEach(section => {
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = 'section';
+
+            const sectionTitle = document.createElement('h3');
+            sectionTitle.textContent = section.name;
+            sectionDiv.appendChild(sectionTitle);
+
+            section.lines.forEach(line => {
+                const lineDiv = document.createElement('div');
+                lineDiv.className = 'line';
+
+                // Dodajemy akordy
+                line.chordPositions.forEach(({chord, position}) => {
+                    const chordSpan = document.createElement('span');
+                    chordSpan.className = 'chord';
+                    chordSpan.textContent = chord;
+                    chordSpan.style.left = `${position}ch`;
+                    lineDiv.appendChild(chordSpan);
+                });
+
+                // Dodajemy tekst
+                const textSpan = document.createElement('span');
+                textSpan.className = 'text';
+                textSpan.textContent = line.text;
+                lineDiv.appendChild(textSpan);
+
+                sectionDiv.appendChild(lineDiv);
+            });
+
+            songView.appendChild(sectionDiv);
+        });
     }
 
     showSongsList() {

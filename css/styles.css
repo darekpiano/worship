@@ -215,8 +215,9 @@ main {
 .line {
     position: relative;
     margin-bottom: 0.8rem;
-    padding-top: 1.2rem;
+    padding-top: 1.5rem;
     text-align: left;
+    min-height: 2.5rem;
 }
 
 .chord {
@@ -225,14 +226,14 @@ main {
     position: absolute;
     top: 0;
     font-size: 0.9rem;
-    left: 0;
-    transform: none;
+    transform: translateX(-50%);
     white-space: nowrap;
 }
 
 .text {
     display: block;
-    padding-left: 0;
+    position: relative;
+    line-height: 1.4;
 }
 
 /* Song detail view */
