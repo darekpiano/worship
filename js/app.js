@@ -151,7 +151,9 @@ class SongbookApp {
                         ${section.name ? `<h3>${section.name}</h3>` : ''}
                         ${section.lines.map(line => `
                             <div class="line">
-                                ${line.chords ? `<span class="chord">${line.chords}</span>` : ''}
+                                ${line.chordPositions.map(cp => `
+                                    <span class="chord" style="left: ${cp.position}ch">${cp.chord}</span>
+                                `).join('')}
                                 <span class="text">${line.text}</span>
                             </div>
                         `).join('')}

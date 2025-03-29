@@ -29,12 +29,23 @@ class SongParser {
             } else if (line.startsWith('{end_of_')) {
                 currentSection = null;
             } else if (currentSection && !line.startsWith('{')) {
-                const chordLine = line.match(/\[(.*?)\]/g)?.join(' ') || '';
-                const textLine = line.replace(/\[.*?\]/g, '').trim();
+                const chordPositions = [];
+                let textLine = line;
+                let match;
+                const chordPattern = /\[(.*?)\]/g;
                 
-                if (textLine || chordLine) {
+                while ((match = chordPattern.exec(line)) !== null) {
+                    chordPositions.push({
+                        chord: match[1],
+                        position: match.index
+                    });
+                }
+                
+                textLine = line.replace(/\[.*?\]/g, '');
+                
+                if (textLine || chordPositions.length > 0) {
                     currentSection.lines.push({
-                        chords: chordLine,
+                        chordPositions,
                         text: textLine
                     });
                 }

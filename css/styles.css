@@ -188,10 +188,10 @@ main {
 }
 
 .line {
-    margin-bottom: 1rem;
     position: relative;
+    margin-bottom: 1.5rem;
     padding-top: 1.2rem;
-    text-align: center;
+    text-align: left;
 }
 
 .chord {
@@ -200,8 +200,8 @@ main {
     position: absolute;
     top: 0;
     font-size: 0.9rem;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    transform: none;
 }
 
 .text {
