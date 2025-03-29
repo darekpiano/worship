@@ -1,43 +1,52 @@
 // Main application class
-class App {
+class SongbookApp {
     constructor() {
-        this.songParser = new SongParser();
-        this.songsList = document.getElementById('songsList');
-        this.songView = document.getElementById('songView');
+        this.songs = [];
+        this.currentLetter = null;
         this.searchInput = document.getElementById('searchInput');
-        this.searchButton = document.getElementById('searchButton');
+        this.songsList = document.querySelector('.songs-list');
+        this.songView = document.querySelector('.song-view');
+        this.alphabet = document.querySelector('.alphabet');
+        this.songParser = new SongParser();
+        
+        // Font size controls
         this.fontSizeIncrease = document.getElementById('fontSizeIncrease');
         this.fontSizeDecrease = document.getElementById('fontSizeDecrease');
-
         this.currentFontSize = parseInt(localStorage.getItem('fontSize')) || 16;
         document.documentElement.style.fontSize = `${this.currentFontSize}px`;
         
-        this.songs = [];
         this.init();
     }
 
     async init() {
         await this.loadSongs();
         this.setupEventListeners();
-        this.loadLastSong();
+        this.displaySongsList();
     }
 
     async loadSongs() {
         try {
-            for (const songId of SONGS_LIST) {
-                const response = await fetch(`songs/${songId}.chordpro`);
-                if (!response.ok) continue;
-
-                const content = await response.text();
-                const song = this.songParser.parse(content);
-                song.id = songId;
-                this.songs.push(song);
-            }
-
+            // Get list of all song files
+            const songIds = Array.from({ length: 15 }, (_, i) => `song${i + 1}`);
+            const loadPromises = songIds.map(id => this.loadSongData(id));
+            this.songs = (await Promise.all(loadPromises)).filter(song => song !== null);
             this.songs.sort((a, b) => a.title.localeCompare(b.title));
-            this.renderSongsList();
         } catch (error) {
             console.error('Error loading songs:', error);
+        }
+    }
+
+    async loadSongData(songId) {
+        try {
+            const response = await fetch(`/worship/songs/${songId}.chordpro`);
+            if (!response.ok) return null;
+            const content = await response.text();
+            const song = this.songParser.parse(content);
+            song.id = songId;
+            return song;
+        } catch (error) {
+            console.error(`Error loading song ${songId}:`, error);
+            return null;
         }
     }
 
@@ -46,127 +55,90 @@ class App {
         this.fontSizeIncrease.addEventListener('click', () => this.changeFontSize(1));
         this.fontSizeDecrease.addEventListener('click', () => this.changeFontSize(-1));
 
-        // Search handling
-        this.searchButton.addEventListener('click', () => this.toggleSearch());
+        // Search input
         this.searchInput.addEventListener('input', () => {
-            const isSearching = this.searchInput.value.length > 0;
-            document.body.classList.toggle('searching', isSearching);
-            this.filterSongs();
+            this.currentLetter = null;
+            this.displaySongsList();
+            this.updateAlphabetHighlight();
         });
 
-        // Handle back button
-        window.addEventListener('popstate', (e) => {
-            if (e.state && e.state.songId) {
-                this.loadAndDisplaySong(e.state.songId);
-            } else {
-                this.showSearch();
+        // Alphabet navigation
+        this.alphabet.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                const letter = e.target.textContent;
+                this.currentLetter = this.currentLetter === letter ? null : letter;
+                this.searchInput.value = '';
+                this.displaySongsList();
+                this.updateAlphabetHighlight();
             }
         });
 
-        // Handle escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                this.hideSearch();
-            }
-        });
-    }
-
-    toggleSearch() {
-        const isSearching = document.body.classList.toggle('searching');
-        if (isSearching) {
-            this.searchInput.focus();
-        } else {
-            this.searchInput.value = '';
-            this.filterSongs();
-        }
-    }
-
-    hideSearch() {
-        document.body.classList.remove('searching');
-        this.searchInput.value = '';
-        this.filterSongs();
-    }
-
-    filterSongs() {
-        const searchTerm = this.searchInput.value.toLowerCase();
-        const filteredSongs = this.songs.filter(song => 
-            song.title.toLowerCase().includes(searchTerm)
-        );
-        this.renderSongsList(filteredSongs);
-    }
-
-    renderSongsList(songs = this.songs) {
-        this.songsList.innerHTML = songs
-            .map(song => `
-                <div class="song-item" data-id="${song.id}">
-                    <h3>${song.title}</h3>
-                    ${song.subtitle ? `<p>${song.subtitle}</p>` : ''}
-                </div>
-            `)
-            .join('');
-
-        this.songsList.querySelectorAll('.song-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const songId = item.dataset.id;
+        // Song selection
+        this.songsList.addEventListener('click', (e) => {
+            const songItem = e.target.closest('.song-item');
+            if (songItem) {
+                const songId = songItem.dataset.songId;
                 this.loadAndDisplaySong(songId);
-                history.pushState({ songId }, '', `#${songId}`);
-                this.hideSearch();
-            });
+            }
+        });
+    }
+
+    displaySongsList() {
+        const searchTerm = this.searchInput.value.toLowerCase();
+        let filteredSongs = this.songs;
+
+        if (searchTerm) {
+            filteredSongs = this.songs.filter(song => 
+                song.title.toLowerCase().includes(searchTerm) ||
+                song.author.toLowerCase().includes(searchTerm)
+            );
+        } else if (this.currentLetter) {
+            filteredSongs = this.songs.filter(song => 
+                song.title.charAt(0).toUpperCase() === this.currentLetter
+            );
+        }
+
+        this.songsList.innerHTML = filteredSongs.map(song => `
+            <div class="song-item" data-song-id="${song.id}">
+                <h3>${song.title}</h3>
+                <p>${song.author}</p>
+            </div>
+        `).join('');
+    }
+
+    updateAlphabetHighlight() {
+        const buttons = this.alphabet.querySelectorAll('button');
+        buttons.forEach(button => {
+            button.classList.toggle('active', button.textContent === this.currentLetter);
         });
     }
 
     async loadAndDisplaySong(songId) {
         try {
-            const response = await fetch(`songs/${songId}.chordpro`);
-            if (!response.ok) throw new Error('Failed to load song');
-
+            const response = await fetch(`/worship/songs/${songId}.chordpro`);
+            if (!response.ok) throw new Error('Song not found');
+            
             const content = await response.text();
             const song = this.songParser.parse(content);
-            song.id = songId;
-            this.displaySong(song);
-            localStorage.setItem('lastSongId', songId);
+            
+            this.songView.innerHTML = `
+                <h2>${song.title}</h2>
+                <div class="subtitle">${song.author}</div>
+                ${song.sections.map(section => `
+                    <div class="section">
+                        ${section.name ? `<h3>${section.name}</h3>` : ''}
+                        ${section.lines.map(line => `
+                            <div class="line">
+                                ${line.chords ? `<span class="chord">${line.chords}</span>` : ''}
+                                <span class="text">${line.text}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `).join('')}
+            `;
         } catch (error) {
             console.error('Error loading song:', error);
-        }
-    }
-
-    displaySong(song) {
-        this.songView.innerHTML = `
-            <h2>${song.title}</h2>
-            ${song.subtitle ? `<p class="subtitle">${song.subtitle}</p>` : ''}
-            ${song.sections.map(section => `
-                <div class="section ${section.type}">
-                    <h3>${section.name}</h3>
-                    ${section.lines.map(line => `
-                        <div class="line">
-                            ${line.map(part => 
-                                part.type === 'chord' 
-                                    ? `<span class="chord">${part.content}</span>`
-                                    : `<span class="text">${part.content}</span>`
-                            ).join('')}
-                        </div>
-                    `).join('')}
-                </div>
-            `).join('')}
-        `;
-    }
-
-    showSearch() {
-        document.body.classList.add('searching');
-        this.songView.innerHTML = '';
-        this.searchInput.focus();
-    }
-
-    loadLastSong() {
-        const songId = localStorage.getItem('lastSongId');
-        const hash = window.location.hash.slice(1);
-
-        if (hash) {
-            this.loadAndDisplaySong(hash);
-        } else if (songId) {
-            this.loadAndDisplaySong(songId);
-        } else {
-            this.showSearch();
+            this.songView.innerHTML = '<p>Error loading song</p>';
         }
     }
 
@@ -177,7 +149,7 @@ class App {
     }
 }
 
-// Initialize app when DOM is loaded
+// Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
-    new App();
+    new SongbookApp();
 }); 

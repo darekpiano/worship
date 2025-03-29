@@ -4,29 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Śpiewnik</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="/worship/css/styles.css">
 </head>
 <body>
     <header>
         <h1>Śpiewnik</h1>
         <div class="controls">
-            <button id="searchButton">🔍</button>
-            <button id="fontSizeIncrease">A+</button>
             <button id="fontSizeDecrease">A-</button>
+            <button id="fontSizeIncrease">A+</button>
         </div>
     </header>
-
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Szukaj piosenki...">
-        <div class="songs-list" id="songsList"></div>
-    </div>
-
     <main>
-        <div class="song-view" id="songView"></div>
+        <div class="search-section">
+            <input type="text" id="searchInput" placeholder="Szukaj...">
+            <div class="alphabet">
+                <button>A</button>
+                <button>B</button>
+                <button>C</button>
+                <button>D</button>
+                <button>E</button>
+                <button>F</button>
+                <button>G</button>
+                <button>H</button>
+                <button>I</button>
+                <button>J</button>
+                <button>K</button>
+                <button>L</button>
+                <button>M</button>
+                <button>N</button>
+                <button>O</button>
+                <button>P</button>
+                <button>R</button>
+                <button>S</button>
+                <button>T</button>
+                <button>U</button>
+                <button>W</button>
+                <button>Z</button>
+            </div>
+            <div class="songs-list"></div>
+        </div>
+        <div class="song-view"></div>
     </main>
-
-    <script src="js/songs.js"></script>
-    <script src="js/songParser.js"></script>
-    <script src="js/app.js"></script>
+    <script src="/worship/js/songParser.js"></script>
+    <script src="/worship/js/app.js"></script>
 </body>
 </html> 
