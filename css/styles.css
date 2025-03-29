@@ -33,11 +33,23 @@ body.hide-chords .chord {
 
 body.hide-chords .line {
     padding-top: 0;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
+}
+
+#toggleChords {
+    display: none;
+}
+
+body.song-detail #toggleChords {
+    display: inline-block;
 }
 
 #toggleChords.active {
     background-color: rgba(255, 255, 255, 0.2);
+}
+
+body.song-detail .controls button:not(.back-button):not(#toggleChords) {
+    display: none;
 }
 
 /* Header */
@@ -188,7 +200,7 @@ main {
 
 /* Song sections */
 .section {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .section h3 {
@@ -196,14 +208,14 @@ main {
     text-transform: uppercase;
     color: var(--secondary-color);
     letter-spacing: 1px;
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
     text-align: center;
 }
 
 .line {
     position: relative;
-    margin-bottom: 1.5rem;
-    padding-top: 1.2rem;
+    margin-bottom: 0.8rem;
+    padding-top: 1rem;
     text-align: left;
 }
 
@@ -211,7 +223,7 @@ main {
     color: var(--chord-color);
     font-weight: bold;
     position: absolute;
-    top: 0;
+    top: -0.2rem;
     font-size: 0.9rem;
     left: 0;
     transform: none;
@@ -250,10 +262,6 @@ body.song-detail .back-button {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-}
-
-body.song-detail .controls button:not(.back-button) {
-    display: none;
 }
 
 /* Responsive adjustments */
