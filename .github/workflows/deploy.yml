@@ -2,33 +2,38 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v2
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
         with:
-          path: '.'
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate songs list
+        run: |
+          echo "const SONGS_LIST = [" > songs.js
+          for file in songs/*.chordpro; do
+            if [ -f "$file" ]; then
+              filename=$(basename "$file")
+              id="${filename%.*}"
+              echo "  '$id'," >> songs.js
+            fi
+          done
+          echo "];" >> songs.js
 
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4 
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          publish_branch: gh-pages 

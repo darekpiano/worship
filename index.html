@@ -3,50 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Songbook</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Śpiewnik</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <header>
-        <h1>Songbook</h1>
+        <h1>Śpiewnik</h1>
         <div class="controls">
-            <button id="toggleChords" title="Pokaż/ukryj akordy">
-                <span class="icon">🎸</span>
-            </button>
-            <div class="font-size">
-                <button id="decreaseFont" title="Zmniejsz czcionkę">A-</button>
-                <button id="increaseFont" title="Zwiększ czcionkę">A+</button>
-            </div>
-        </div>
-        <div class="search">
-            <input type="text" id="searchInput" placeholder="Szukaj w tytułach i tekstach...">
+            <button id="searchButton">🔍</button>
+            <button id="fontSizeIncrease">A+</button>
+            <button id="fontSizeDecrease">A-</button>
         </div>
     </header>
 
-    <nav class="alphabet">
-        <div id="alphabetNav"></div>
-    </nav>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Szukaj piosenki...">
+        <div class="songs-list" id="songsList"></div>
+    </div>
 
     <main>
-        <div id="songList" class="song-list"></div>
-        <div id="songView" class="song-view"></div>
+        <div class="song-view" id="songView"></div>
     </main>
 
-    <!-- Wbudowane dane piosenek -->
-    <script>
-        // Tu będą wczytane dane piosenek w formacie JSON
-        const SONGS_DATA = [
-            // dane będą dodawane automatycznie podczas budowania
-        ];
-    </script>
-
-    <!-- Komponenty aplikacji -->
+    <script src="songs.js"></script>
     <script src="js/songParser.js"></script>
-    <script src="js/songList.js"></script>
-    <script src="js/songView.js"></script>
-    <script src="js/search.js"></script>
-    <script src="js/alphabetNav.js"></script>
-    <script src="js/fontSizeController.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html> 
