@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Śpiewnik</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Śpiewnik</h1>
+        <div class="controls">
+            <button id="searchButton">🔍</button>
+            <button id="fontSizeIncrease">A+</button>
+            <button id="fontSizeDecrease">A-</button>
+        </div>
+    </header>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Szukaj piosenki...">
+        <div class="songs-list" id="songsList"></div>
+    </div>
+
+    <main>
+        <div class="song-view" id="songView"></div>
+    </main>
+
+    <script src="songs.js"></script>
+    <script src="js/songParser.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html> 

@@ -1,0 +1,249 @@
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #34495e;
+    --accent-color: #3498db;
+    --text-color: #2c3e50;
+    --background-color: #f5f6fa;
+    --chord-color: #e74c3c;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    padding-top: 3rem;
+}
+
+header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.5rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 3rem;
+}
+
+header h1 {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.controls button {
+    background-color: transparent;
+    border: 1px solid white;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.controls button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.controls button:active {
+    transform: scale(0.95);
+}
+
+#searchButton {
+    font-size: 1.2rem;
+    padding: 0.25rem 0.5rem;
+    line-height: 1;
+}
+
+main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.song-view {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.song-view h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+    text-align: center;
+}
+
+.song-view .subtitle {
+    color: var(--secondary-color);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.section {
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.section:nth-child(1) { animation-delay: 0.1s; }
+.section:nth-child(2) { animation-delay: 0.2s; }
+.section:nth-child(3) { animation-delay: 0.3s; }
+.section:nth-child(4) { animation-delay: 0.4s; }
+.section:nth-child(5) { animation-delay: 0.5s; }
+
+.section h3 {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.line {
+    margin-bottom: 1rem;
+    position: relative;
+    padding-top: 1.5rem;
+    text-align: center;
+}
+
+.chord {
+    color: var(--chord-color);
+    font-weight: bold;
+    position: absolute;
+    top: 0;
+    font-size: 0.9rem;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.text {
+    display: block;
+}
+
+/* Search interface */
+.search-container {
+    position: fixed;
+    top: 3rem;
+    left: 0;
+    right: 0;
+    background-color: white;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 99;
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+body.searching .search-container {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+body.searching main {
+    padding-top: 4rem;
+    transition: padding-top 0.3s ease;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.songs-list {
+    display: none;
+    margin-top: 1rem;
+}
+
+body.searching .songs-list {
+    display: block;
+}
+
+.song-item {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.song-item:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.song-item:active {
+    transform: translateY(0);
+}
+
+.song-item h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+    color: var(--primary-color);
+}
+
+.song-item p {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+
+    main {
+        padding: 0.5rem;
+    }
+
+    .song-view {
+        padding: 1rem;
+    }
+
+    .line {
+        padding-top: 1.2rem;
+    }
+} 
