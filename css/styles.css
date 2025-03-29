@@ -215,7 +215,7 @@ main {
 .line {
     position: relative;
     margin-bottom: 0.8rem;
-    padding-top: 1rem;
+    padding-top: 1.2rem;
     text-align: left;
 }
 
@@ -223,14 +223,16 @@ main {
     color: var(--chord-color);
     font-weight: bold;
     position: absolute;
-    top: -0.2rem;
+    top: 0;
     font-size: 0.9rem;
     left: 0;
     transform: none;
+    white-space: nowrap;
 }
 
 .text {
     display: block;
+    padding-left: 0;
 }
 
 /* Song detail view */
