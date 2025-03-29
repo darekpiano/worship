@@ -1,20 +1,27 @@
 // Main application class
 class SongbookApp {
     constructor() {
-        this.songs = [];
-        this.currentLetter = null;
+        // Wait for DOM to be ready
+        this.initializeAfterDOMLoaded();
+    }
+
+    initializeAfterDOMLoaded() {
+        // Initialize DOM elements
         this.searchInput = document.getElementById('searchInput');
         this.songsList = document.querySelector('.songs-list');
         this.songView = document.querySelector('.song-view');
         this.alphabet = document.querySelector('.alphabet');
-        this.songParser = new SongParser();
-        
-        // Font size controls
         this.fontSizeIncrease = document.getElementById('fontSizeIncrease');
         this.fontSizeDecrease = document.getElementById('fontSizeDecrease');
+
+        // Initialize other properties
+        this.songs = [];
+        this.currentLetter = null;
+        this.songParser = new SongParser();
         this.currentFontSize = parseInt(localStorage.getItem('fontSize')) || 16;
         document.documentElement.style.fontSize = `${this.currentFontSize}px`;
         
+        // Start the app
         this.init();
     }
 
@@ -31,6 +38,7 @@ class SongbookApp {
             const loadPromises = songIds.map(id => this.loadSongData(id));
             this.songs = (await Promise.all(loadPromises)).filter(song => song !== null);
             this.songs.sort((a, b) => a.title.localeCompare(b.title));
+            console.log('Loaded songs:', this.songs);
         } catch (error) {
             console.error('Error loading songs:', error);
         }
@@ -38,8 +46,11 @@ class SongbookApp {
 
     async loadSongData(songId) {
         try {
-            const response = await fetch(`/worship/songs/${songId}.chordpro`);
-            if (!response.ok) return null;
+            const response = await fetch(`songs/${songId}.chordpro`);
+            if (!response.ok) {
+                console.log(`Song ${songId} not found`);
+                return null;
+            }
             const content = await response.text();
             const song = this.songParser.parse(content);
             song.id = songId;
@@ -51,6 +62,11 @@ class SongbookApp {
     }
 
     setupEventListeners() {
+        if (!this.fontSizeIncrease || !this.fontSizeDecrease || !this.searchInput || !this.alphabet || !this.songsList) {
+            console.error('Required DOM elements not found');
+            return;
+        }
+
         // Font size controls
         this.fontSizeIncrease.addEventListener('click', () => this.changeFontSize(1));
         this.fontSizeDecrease.addEventListener('click', () => this.changeFontSize(-1));
@@ -84,6 +100,8 @@ class SongbookApp {
     }
 
     displaySongsList() {
+        if (!this.songsList) return;
+
         const searchTerm = this.searchInput.value.toLowerCase();
         let filteredSongs = this.songs;
 
@@ -107,6 +125,8 @@ class SongbookApp {
     }
 
     updateAlphabetHighlight() {
+        if (!this.alphabet) return;
+
         const buttons = this.alphabet.querySelectorAll('button');
         buttons.forEach(button => {
             button.classList.toggle('active', button.textContent === this.currentLetter);
@@ -114,8 +134,10 @@ class SongbookApp {
     }
 
     async loadAndDisplaySong(songId) {
+        if (!this.songView) return;
+
         try {
-            const response = await fetch(`/worship/songs/${songId}.chordpro`);
+            const response = await fetch(`songs/${songId}.chordpro`);
             if (!response.ok) throw new Error('Song not found');
             
             const content = await response.text();
@@ -149,7 +171,7 @@ class SongbookApp {
     }
 }
 
-// Initialize the app
+// Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     new SongbookApp();
 }); 
