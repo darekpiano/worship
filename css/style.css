@@ -136,13 +136,49 @@ main {
     overflow-y: auto;
 }
 
-.chord {
+.section-name {
+    font-weight: bold;
+    margin: 1.5rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.section-name.chorus {
+    color: var(--secondary-color);
+    border-bottom-color: var(--secondary-color);
+}
+
+.section-name.verse {
+    color: var(--primary-color);
+}
+
+.section-name.instrumental {
+    color: var(--chord-color);
+    border-bottom-color: var(--chord-color);
+}
+
+.line {
+    display: flex;
+    margin-bottom: 0.5rem;
+}
+
+.line .chords {
     color: var(--chord-color);
     font-weight: bold;
     font-family: monospace;
+    margin-right: 1rem;
+    min-width: 100px;
 }
 
-.hide-chords .chord {
+.line .text {
+    flex: 1;
+}
+
+.line.empty {
+    height: 1rem;
+}
+
+.hide-chords .chords {
     display: none;
 }
 

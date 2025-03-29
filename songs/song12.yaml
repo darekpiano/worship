@@ -1,0 +1,62 @@
+id: "12"
+title: "Moje wędrowanie"
+author: "Jacek Wąsowski"
+year: "1998"
+tags: ["worship", "praise", "guitar"]
+key: "Em"
+verses:
+  - content: |
+      Wstęp: Em C Em C
+
+      Zwrotka 1:
+      Em   D/F#   G    Am    G
+      Moje wędrowanie, Panie mój
+      Em   D/F#   G  Am    D
+      Moje upadanie, Panie mój
+      Em   D/F#   G     Am    D
+      Moje powstawanie, Panie mój
+      Em    D/F#  G
+      Twoje miłowanie
+
+      Refren:
+             C                          G   D/F#  Em C
+      Jesteś dla nas, spragnionych, jak rosa poranna
+      Tobie śpiewamy radosne Hosanna
+      Jesteś dla nas, wędrowców, jak zdrój czystej wody
+      Duszy wytchnienie, niebiańskie ogrody
+
+  - content: |
+      Zwrotka 2: 
+      Em    D/F#   G    Am    G
+      Nasze wędrowanie, Panie nasz
+      Em    D/F# G    Am    D
+      Nasze upadanie, Panie nasz
+      Em    D/F#    G    Am    D
+      Nasze powstawanie, Panie nasz
+      Em    D/F#  G
+      Twoje miłowanie
+
+      Refren:
+             C                      G       D/F# Em C
+      Jesteś dla nas, żeglarzy, jak gwiazda zaranna
+      Tobie śpiewamy radosne Hosanna
+      Jesteś dla nas, pielgrzymów, jak burzy ustanie
+      Jesteś Drogą, co nam przez Ojca jest dana
+      
+      Jesteś dla nas, spragnionych, jak rosa poranna
+      Tobie śpiewamy radosne Hosanna
+      Jesteś dla nas, wędrowców, jak zdrój czystej wody
+      Duszy wytchnienie, niebiańskie ogrody
+
+  - content: |
+      
+      C G D/F# Em C
+      Instrumentalnie:
+      
+  - content: |
+      Refren:
+             C                          G     D/F# Em C
+      Jesteś dla nas, spragnionych, jak rosa poranna
+      Tobie śpiewamy radosne Hosanna
+      Jesteś dla nas, wędrowców, jak zdrój czystej wody
+      Duszy wytchnienie, niebiańskie ogrody
